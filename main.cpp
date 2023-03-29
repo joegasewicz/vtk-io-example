@@ -4,10 +4,11 @@
 #include <vtkSmartPointer.h>
 #include <vtkDelaunay3D.h>
 #include <vtkXMLDataSetWriter.h>
+#include <vtkUnstructuredGridWriter.h>
 
 
 int main(int argc, char *argv[]) {
-    std::cout << "VTK Demo #1 loading..." << std::endl;
+    std::cout << "Jewel App loading..." << std::endl;
 
     if (argc != 2)
     {
@@ -34,11 +35,16 @@ int main(int argc, char *argv[]) {
 
     // write to xml
     vtkSmartPointer<vtkXMLDataSetWriter> writer = vtkSmartPointer<vtkXMLDataSetWriter>::New();
-    writer->SetFileName("./delaunay_3dbox.xml");
-    // get the specific poly data & check the results
+    writer->SetFileName("../xml/delaunay_3dbox.xml");
     writer->SetInputConnection(delaunay->GetOutputPort());
     writer->SetDataModeToBinary();
     writer->Write();
+
+    // write to legacy
+    vtkSmartPointer<vtkUnstructuredGridWriter> poly_writer = vtkSmartPointer<vtkUnstructuredGridWriter>::New();
+    poly_writer->SetFileName("../vtk/delaunay_3dbox_unstructured.vtk");
+    poly_writer->SetInputConnection(delaunay->GetOutputPort());
+    poly_writer->Write();
 
     return 0;
 }
