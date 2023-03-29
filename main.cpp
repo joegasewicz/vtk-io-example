@@ -2,6 +2,8 @@
 #include <vtkPolyDataReader.h>
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
+#include <vtkDelaunay3D.h>
+#include <vtkXMLDataSetWriter.h>
 
 
 int main(int argc, char *argv[]) {
@@ -25,6 +27,18 @@ int main(int argc, char *argv[]) {
     vtkPolyData *poly_data = reader->GetOutput();
     poly_data->Print(std::cout);
 
+    // Triangulate the grid points
+    vtkSmartPointer<vtkDelaunay3D> delaunay = vtkSmartPointer<vtkDelaunay3D>::New();
+    delaunay->SetInputData(poly_data);
+    delaunay->Update();
+
+    // write to xml
+    vtkSmartPointer<vtkXMLDataSetWriter> writer = vtkSmartPointer<vtkXMLDataSetWriter>::New();
+    writer->SetFileName("./delaunay_3dbox.xml");
+    // get the specific poly data & check the results
+    writer->SetInputConnection(delaunay->GetOutputPort());
+    writer->SetDataModeToBinary();
+    writer->Write();
 
     return 0;
 }

@@ -10,6 +10,7 @@ find_package(VTK COMPONENTS
         FiltersSources
         InteractionStyle
         IOLegacy
+        IOXML
         RenderingContextOpenGL2
         RenderingCore
         RenderingFreeType
